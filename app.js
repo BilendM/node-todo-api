@@ -3,17 +3,18 @@ const app = express();
 const tasks = require('./routes/tasks')
 const connectDB = require('./db/connect')
 require('dotenv').config()
+const notFound = require('./middleware/not-found');
+// Custom Error Handler
+const errorHandler = require('./middleware/error-handler');
 
 // Middleware
+// app.use(express.static('./public')) // Using Static files
 app.use(express.json());
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-})
-
 app.use('/api/v1/tasks', tasks)
+app.use(notFound)
+app.use(errorHandler)
 
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 const start = async () => {
   try {
